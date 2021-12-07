@@ -152,27 +152,32 @@ export default function index({navigation}) {
     });
   };
 
+  const handlePress = item => {
+    if (item.name !== null) {
+      Alert.alert('Are You Sure?', 'Device will be connected', [
+        {
+          onPress: () => {
+            navigation.navigate('Home', {id: item.id});
+            // setLoading(true);
+          },
+          text: 'Ok',
+          style: 'default',
+        },
+        {
+          onPress: () => console.log('canceled'),
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ]);
+    } else {
+      ToastAndroid.show('Cannot connect this device', ToastAndroid.SHORT);
+    }
+  };
+
   const renderList = ({item}) => {
     console.log('XXXXX', scanData.length);
     return (
-      <TouchableOpacity
-        onPress={() => {
-          Alert.alert('Are You Sure?', 'Device will be connected', [
-            {
-              onPress: () => {
-                navigation.navigate('Home', {id: item.id});
-                // setLoading(true);
-              },
-              text: 'Ok',
-              style: 'default',
-            },
-            {
-              onPress: () => console.log('canceled'),
-              text: 'Cancel',
-              style: 'cancel',
-            },
-          ]);
-        }}>
+      <TouchableOpacity onPress={() => handlePress(item)}>
         <View>
           <Text style={{color: '#fff', fontSize: width * 0.06}}>
             {item.name == null ? 'N/A' : item.name}

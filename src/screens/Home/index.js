@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -15,19 +15,19 @@ import styles from './style';
 import BleManager from 'react-native-ble-manager';
 import Loader from '../../Components/Loader';
 import clc from 'cli-color';
-import { bytesToString, stringToBytes } from 'convert-string';
-import { useFocusEffect } from '@react-navigation/native';
+import {bytesToString, stringToBytes} from 'convert-string';
+import {useFocusEffect} from '@react-navigation/native';
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const serId = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const writeCharId = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
 const readCharId = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 
-export default function Home({ route, navigation }) {
+export default function Home({route, navigation}) {
   let macId = route.params.id;
   const [loading, setLoading] = useState(false);
   const [openColor, setOpenColor] = useState(false);
@@ -35,14 +35,14 @@ export default function Home({ route, navigation }) {
   const [colorVal, setColorVal] = useState('');
   const [quantityVal, setQuantityVal] = useState('');
   const [colors, setColors] = useState([
-    { label: 'Red', value: 'RED' },
-    { label: 'Green', value: 'GREEN' },
-    { label: 'Blue', value: 'BLUE' },
+    {label: 'Red', value: 'RED'},
+    {label: 'Green', value: 'GREEN'},
+    {label: 'Blue', value: 'BLUE'},
   ]);
   const [quantity, setQuantity] = useState([
-    { label: '20', value: 20 },
-    { label: '50', value: 50 },
-    { label: '100', value: 100 },
+    {label: '20', value: 20},
+    {label: '50', value: 50},
+    {label: '100', value: 100},
   ]);
 
   const [readyStatus, setReadyStatus] = useState(false);
@@ -51,7 +51,7 @@ export default function Home({ route, navigation }) {
   const [dispenseStatus, setDispenseStatus] = useState(false);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       console.log('mocx', macId);
       _connectDevice(macId);
       // return () =>;
@@ -70,7 +70,7 @@ export default function Home({ route, navigation }) {
           onPress: () => null,
           style: 'cancel',
         },
-        { text: 'YES', onPress: () => BackHandler.exitApp() },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
       ]);
       return true;
     };
@@ -125,25 +125,23 @@ export default function Home({ route, navigation }) {
       // Add event listener
       bleManagerEmitter.addListener(
         'BleManagerDidUpdateValueForCharacteristic',
-        ({ value, peripheral, characteristic, service }) => {
+        ({value, peripheral, characteristic, service}) => {
           // Convert bytes array to string
           const data = bytesToString(value);
           console.log(`Recieved ${data} for characteristic ${characteristic}`); //todo: date == {STATUS : r||d||f}
 
           if (isJson(data)) {
             const jsonData = JSON.parse(data);
-            console.log('what?', jsonData.STATUS)
+            console.log('what?', jsonData.STATUS);
             if (jsonData.STATUS == 'r') {
               setReadyStatus(true);
               setRefillStatus(false);
               setDispenseStatus(false);
-            }
-            else if (jsonData.STATUS == 'd') {
+            } else if (jsonData.STATUS == 'd') {
               setDispenseStatus(true);
               setReadyStatus(false);
               setRefillStatus(false);
-            }
-            else if (jsonData.STATUS == 'f') {
+            } else if (jsonData.STATUS == 'f') {
               setRefillStatus(true);
               setDispenseStatus(false);
               setReadyStatus(false);
@@ -167,10 +165,10 @@ export default function Home({ route, navigation }) {
   }
 
   const _writeToDevice = () => {
-    const jsonData = { COLOR: colorVal, QUANTITY: quantityVal.toString() };
+    const jsonData = {COLOR: colorVal, QUANTITY: quantityVal.toString()};
     const stringData = JSON.stringify(jsonData);
     const bytesData = stringToBytes(stringData);
-    console.log('XXX))XXX', stringData)
+    console.log('XXX))XXX', stringData);
     BleManager.write(macId, serId, writeCharId, bytesData, 400)
       .then(() => {
         // Success code
@@ -241,16 +239,17 @@ export default function Home({ route, navigation }) {
 
   const _connectDevice = macId => {
     // setLoading(true)
-    BleManager.connect(macId).then(() => {
-      console.log('Connected');
-      setTimeout(() => {
-        _retrieveServ();
-      }, 800);
-      ToastAndroid.show('Connected Successfully', ToastAndroid.SHORT);
-    }).catch((e) => {
-      console.log('Not Connected', e);
-
-    })
+    BleManager.connect(macId)
+      .then(() => {
+        console.log('Connected');
+        setTimeout(() => {
+          _retrieveServ();
+        }, 800);
+        ToastAndroid.show('Connected Successfully', ToastAndroid.SHORT);
+      })
+      .catch(e => {
+        console.log('Not Connected', e);
+      });
   };
 
   console.log('Values', colorVal);
@@ -272,13 +271,13 @@ export default function Home({ route, navigation }) {
             onPress={() => {
               _stopRead(macId);
             }}
-            textStyle={{ fontSize: height * 0.03 }}
+            textStyle={{fontSize: height * 0.03}}
           />
         </View>
         <Text style={styles.mainHeading}>YUV</Text>
         <View style={styles.contentContainer}>
           <DropDownPicker
-            textStyle={{ textTransform: 'uppercase' }}
+            textStyle={{textTransform: 'uppercase'}}
             open={openColor}
             value={colorVal}
             items={colors}
@@ -288,8 +287,8 @@ export default function Home({ route, navigation }) {
             placeholder="Choose Color"
           />
           <DropDownPicker
-            style={{ zIndex: 0 }}
-            textStyle={{ textTransform: 'uppercase' }}
+            style={{zIndex: 0}}
+            textStyle={{textTransform: 'uppercase'}}
             open={openQuantity}
             value={quantityVal}
             items={quantity}
@@ -304,21 +303,23 @@ export default function Home({ route, navigation }) {
               colorVal !== '' && quantityVal !== ''
                 ? _writeToDevice()
                 : ToastAndroid.show(
-                  'Select Color and Quantity',
-                  ToastAndroid.SHORT,
-                );
+                    'Select Color and Quantity',
+                    ToastAndroid.SHORT,
+                  );
             }}
             style={styles.button}
-            textStyle={{ textTransform: 'uppercase' }}
+            textStyle={{textTransform: 'uppercase'}}
           />
 
           <View style={styles.valueContainer}>
             <View>
               <Text style={styles.valueText}>Status:</Text>
-              <Text style={styles.valueText}>{`${readyStatus ? 'Ready' : 'Not Ready'
-                } / ${refillStatus ? 'Refill' : ''}`}</Text>
-              <Text style={styles.valueText}>{`${colorVal} ${quantityVal} / ${dispenseStatus ? 'Dispensing' : 'Not Dispensing'
-                } /`}</Text>
+              <Text style={styles.valueText}>{`${
+                readyStatus ? 'Ready' : 'Not Ready'
+              } / ${refillStatus ? 'Refill' : ''}`}</Text>
+              <Text style={styles.valueText}>{`${colorVal} ${quantityVal} / ${
+                dispenseStatus ? 'Dispensing' : 'Not Dispensing'
+              } /`}</Text>
             </View>
           </View>
         </View>
