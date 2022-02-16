@@ -206,23 +206,37 @@ export default function index({navigation}) {
             </Text>
           </View>
         ) : (
-          <FlatList
-            data={scanData}
-            renderItem={renderList}
-            ItemSeparatorComponent={() => {
-              return (
-                <View
-                  style={{
-                    borderWidth: height * 0.001,
-                    borderColor: '#fff',
-                    marginVertical: height * 0.02,
-                  }}
-                />
-              );
-            }}
-          />
+          <>
+            <FlatList
+              data={scanData}
+              renderItem={renderList}
+              style={{height: height * 0.8}}
+              ItemSeparatorComponent={() => {
+                return (
+                  <View
+                    style={{
+                      borderWidth: height * 0.001,
+                      borderColor: '#fff',
+                      marginVertical: height * 0.02,
+                    }}
+                  />
+                );
+              }}
+            />
+            <View
+              style={{
+                height: height * 0.2,
+                paddingTop: 8,
+              }}>
+              <Button
+                title="Re-Scan"
+                onPress={_scanAndGet}
+                style={[styles.button, {alignSelf: 'center'}]}
+                textStyle={{textTransform: 'uppercase'}}
+              />
+            </View>
+          </>
         )}
-
         <View style={{marginTop: height * 0.05, alignItems: 'center'}}>
           <Button
             title="Re-Scan"

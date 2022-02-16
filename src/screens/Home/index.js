@@ -7,6 +7,7 @@ import {
   NativeEventEmitter,
   ToastAndroid,
   BackHandler,
+  TouchableOpacity,
   Alert,
 } from 'react-native';
 import Button from '../../Components/Button';
@@ -172,22 +173,39 @@ export default function Home({route, navigation}) {
     }
   }
 
-  const _writeToDevice = () => {
-    const jsonData = {COLOR: colorVal, QUANTITY: quantityVal.toString()};
-    const stringData = JSON.stringify(jsonData);
-    const bytesData = stringToBytes(stringData);
-    console.log('XXX))XXX', stringData);
-    BleManager.write(macId, serId, writeCharId, bytesData, 400)
-      .then(() => {
-        // Success code
-        console.log('Write: ' + stringData);
-        console.log('Write: ' + bytesData);
-        // setDispenseStatus(!dispenseStatus);
-      })
-      .catch(error => {
-        // Failure code
-        console.log('Write Failed: ', error);
-      });
+  const _writeToDevice = firmUp => {
+    if (firmUp) {
+      const stringData = 'up';
+      const bytesData = stringToBytes(stringData);
+      console.log('XXX))XXX', stringData);
+      BleManager.write(macId, serId, writeCharId, bytesData, 400)
+        .then(() => {
+          // Success code
+          console.log('Write: ' + stringData);
+          console.log('Write: ' + bytesData);
+          // setDispenseStatus(!dispenseStatus);
+        })
+        .catch(error => {
+          // Failure code
+          console.log('Write Failed: ', error);
+        });
+    } else {
+      const jsonData = {COLOR: colorVal, QUANTITY: quantityVal.toString()};
+      const stringData = JSON.stringify(jsonData);
+      const bytesData = stringToBytes(stringData);
+      console.log('XXX))XXX', stringData);
+      BleManager.write(macId, serId, writeCharId, bytesData, 400)
+        .then(() => {
+          // Success code
+          console.log('Write: ' + stringData);
+          console.log('Write: ' + bytesData);
+          // setDispenseStatus(!dispenseStatus);
+        })
+        .catch(error => {
+          // Failure code
+          console.log('Write Failed: ', error);
+        });
+    }
   };
 
   const _stopRead = async peripheralId => {
@@ -209,6 +227,9 @@ export default function Home({route, navigation}) {
         });
       console.log('stopped Notify');
     } catch (e) {
+      if (e == 'Device is not connected') {
+        navigation.navigate('Scan');
+      }
       console.log('error', e);
     }
   };
@@ -245,6 +266,35 @@ export default function Home({route, navigation}) {
     });
   };
 
+  const renderColorVal = colorVal => {
+    switch (colorVal) {
+      case '0':
+        return 'Red';
+      case '1':
+        return 'Yellow';
+      case '2':
+        return 'Green';
+      case '3':
+        return 'Pink';
+      case '4':
+        return 'Black';
+      case '5':
+        return 'Aqua';
+      case '6':
+        return 'Aero_Blue';
+      case '7':
+        return 'Blue';
+      case '8':
+        return 'Magenta';
+      case '9':
+        return 'Gold';
+      case '10':
+        return 'Lightener';
+      default:
+        return '';
+    }
+  };
+
   const _connectDevice = macId => {
     // setLoading(true)
     BleManager.connect(macId)
@@ -268,18 +318,24 @@ export default function Home({route, navigation}) {
       <View style={styles.mainContainer}>
         <View
           style={{
+            flexDirection: 'row',
             width: width,
-            height: height * 0.05,
-            justifyContent: 'center',
-            alignItems: 'flex-end',
+            paddingHorizontal: 8,
+            justifyContent: 'space-between',
           }}>
           <Button
-            title="X"
+            iconName={'wifi'}
+            style={styles.buttonRound}
+            onPress={() => {
+              navigation.navigate('Wifi', {macId});
+            }}
+          />
+          <Button
+            iconName={'close'}
             style={styles.buttonRound}
             onPress={() => {
               _stopRead(macId);
             }}
-            textStyle={{fontSize: height * 0.03}}
           />
         </View>
         <Text style={styles.mainHeading}>YUV</Text>
@@ -309,7 +365,7 @@ export default function Home({route, navigation}) {
             title="Dispense"
             onPress={() => {
               colorVal !== '' && quantityVal !== ''
-                ? _writeToDevice()
+                ? _writeToDevice(false)
                 : ToastAndroid.show(
                     'Select Color and Quantity',
                     ToastAndroid.SHORT,
@@ -325,10 +381,19 @@ export default function Home({route, navigation}) {
               <Text style={styles.valueText}>{`${
                 readyStatus ? 'Ready' : 'Not Ready'
               } / ${refillStatus ? 'Refill' : ''}`}</Text>
-              <Text style={styles.valueText}>{`${colorVal} ${quantityVal} / ${
+              <Text style={styles.valueText}>{`${renderColorVal(
+                colorVal,
+              )} ${quantityVal} / ${
                 dispenseStatus ? 'Dispensing' : 'Not Dispensing'
               } /`}</Text>
             </View>
+          </View>
+          <View style={{marginTop: 15}}>
+            <TouchableOpacity
+              style={styles.fuBtn}
+              onPress={() => _writeToDevice(true)}>
+              <Text style={styles.valueText}>Firmware Update</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

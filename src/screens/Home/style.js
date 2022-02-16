@@ -45,6 +45,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  fuBtn: {
+    borderWidth: width * 0.008,
+    borderRadius: width * 0.02,
+    borderColor: '#888888',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+  },
   valueText: {
     color: '#888888',
     fontSize: width * 0.055,

@@ -11,7 +11,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Icon} from 'react-native-elements';
 // import {Fonts} from '../utils/fonts';
 // import LinearGradient from 'react-native-linear-gradient';
 
@@ -28,7 +28,6 @@ const Button = ({
   textStyle,
   iconName,
   iconSize,
-  iconColor,
   activeOpacity,
 }) => {
   // console.log('AyAS', style.width);
@@ -40,7 +39,12 @@ const Button = ({
       {!title == '' ? (
         <Text style={[styles.submitBtnText, textStyle]}>{title}</Text>
       ) : (
-        <Icon name={iconName} color={iconColor} size={iconSize} />
+        <Icon
+          name={iconName}
+          type="material-community"
+          color="#fff"
+          size={20}
+        />
       )}
     </TouchableOpacity>
   );

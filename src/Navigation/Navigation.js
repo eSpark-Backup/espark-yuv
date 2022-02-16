@@ -1,6 +1,7 @@
 import React from 'react';
 import Home from '../screens/Home';
 import Scan from '../screens/ScanScreen';
+import Wifi from '../screens/WifiScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -14,6 +15,7 @@ export default function Navigation() {
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="Scan" component={Scan} />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Wifi" component={Wifi} />
       </Stack.Navigator>
     </NavigationContainer>
   );
