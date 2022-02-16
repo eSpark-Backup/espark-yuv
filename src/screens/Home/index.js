@@ -35,9 +35,17 @@ export default function Home({route, navigation}) {
   const [colorVal, setColorVal] = useState('');
   const [quantityVal, setQuantityVal] = useState('');
   const [colors, setColors] = useState([
-    {label: 'Red', value: 'RED'},
-    {label: 'Green', value: 'GREEN'},
-    {label: 'Blue', value: 'BLUE'},
+    {label: 'Red', value: '0'},
+    {label: 'Yellow', value: '1'},
+    {label: 'Green', value: '2'},
+    {label: 'Pink', value: '3'},
+    {label: 'Black', value: '4'},
+    {label: 'Aqua', value: '5'},
+    {label: 'Aero_Blue', value: '6'},
+    {label: 'Blue', value: '7'},
+    {label: 'Magenta', value: '8'},
+    {label: 'Gold', value: '9'},
+    {label: 'Lightener', value: '10'},
   ]);
   const [quantity, setQuantity] = useState([
     {label: '20', value: 20},
@@ -133,15 +141,15 @@ export default function Home({route, navigation}) {
           if (isJson(data)) {
             const jsonData = JSON.parse(data);
             console.log('what?', jsonData.STATUS);
-            if (jsonData.STATUS == 'r') {
+            if (jsonData.STATUS == '1') {
               setReadyStatus(true);
               setRefillStatus(false);
               setDispenseStatus(false);
-            } else if (jsonData.STATUS == 'd') {
+            } else if (jsonData.STATUS == '2') {
               setDispenseStatus(true);
               setReadyStatus(false);
               setRefillStatus(false);
-            } else if (jsonData.STATUS == 'f') {
+            } else if (jsonData.STATUS == '3') {
               setRefillStatus(true);
               setDispenseStatus(false);
               setReadyStatus(false);
