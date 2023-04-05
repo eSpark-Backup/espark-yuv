@@ -7,13 +7,16 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@react-native-picker/picker": "^1.16.7",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
     "convert-string": "^0.1.0",
+    "patch-package": "^6.5.1",
+    "postinstall-postinstall": "^2.1.0",
     "react": "17.0.2",
     "react-native": "^0.65.1",
     "react-native-ble-manager": "^7.6.0",
