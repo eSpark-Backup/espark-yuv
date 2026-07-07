@@ -16,7 +16,7 @@
     "convert-string": "^0.1.0",
     "react": "17.0.2",
     "react-native": "^0.65.1",
-    "react-native-ble-manager": "^7.6.0",
+    "react-native-ble-manager": "^12.5.1",
     "react-native-dropdown-picker": "^5.1.23",
     "react-native-elements": "^3.4.2",
     "react-native-modal": "^13.0.0",
